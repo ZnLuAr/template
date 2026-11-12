@@ -1,0 +1,16 @@
+# 可选任务入口（需要 just）；命令亦可直接运行，见 README
+default: test
+
+check: vet test
+
+test:
+	go test ./...
+
+vet:
+	go vet ./...
+
+fmt:
+	gofmt -w .
+
+run name="world":
+	go run ./cmd/__project_name__ -name {{name}}

@@ -1,0 +1,8 @@
+[package]
+name = "__pkg_name__"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+description = "TODO: 一句话描述 __project_name__"
+
+[dependencies]

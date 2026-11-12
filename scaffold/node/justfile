@@ -1,0 +1,16 @@
+# 可选任务入口（需要 just）；命令亦可直接运行，见 README
+default: test
+
+check: typecheck lint test
+
+test:
+	npm test
+
+lint:
+	npm run lint
+
+typecheck:
+	npm run typecheck
+
+run name="world":
+	npm run build && node dist/entry/cli.js {{name}}

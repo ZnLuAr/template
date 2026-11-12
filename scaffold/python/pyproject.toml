@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "__project_name__"
+version = "0.1.0"
+description = "TODO: 一句话描述 __project_name__"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+__project_name__ = "__pkg_name__.entry.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "ruff>=0.8",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/__pkg_name__"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+# 中文注释 / docstring 的全角标点是正确排版，RUF001-003 对 CJK 项目属已知误报
+ignore = ["RUF001", "RUF002", "RUF003"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+pythonpath = ["src"]

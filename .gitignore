@@ -1,0 +1,39 @@
+# 通用
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+coverage/
+dist/
+
+# Rust
+target/
+
+# Go
+*.exe
+*.test
+*.out
+
+# 模板自身脚本
+scripts/__pycache__/

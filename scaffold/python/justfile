@@ -1,0 +1,16 @@
+# 可选任务入口（需要 just）；命令亦可直接运行，见 README
+default: test
+
+check: lint test
+
+test:
+	python -m pytest
+
+lint:
+	python -m ruff check src tests
+
+fmt:
+	python -m ruff format src tests
+
+run name="world":
+	PYTHONPATH=src python -m __pkg_name__.entry.cli {{name}}

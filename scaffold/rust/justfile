@@ -1,0 +1,16 @@
+# 可选任务入口（需要 just）；命令亦可直接运行，见 README
+default: test
+
+check: lint test
+
+test:
+	cargo test
+
+lint:
+	cargo clippy -- -D warnings
+
+fmt:
+	cargo fmt
+
+run name="world":
+	cargo run -- {{name}}

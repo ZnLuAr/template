@@ -1,0 +1,15 @@
+# Node
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# 通用
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python scripts/check_docs.py)",
+      "Bash(python -m unittest:*)",
+      "Bash(python scripts/init.py:*)"
+    ]
+  }
+}
