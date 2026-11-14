@@ -12,7 +12,8 @@ npm test               # 测试（vitest）
 npm run typecheck      # 类型检查
 npm run lint           # biome
 
-npm run build && node dist/entry/cli.js Ada    # 运行 CLI
+npm run build && node dist/entry/cli.js Ada             # 运行 CLI
+npm run build && node dist/entry/cli.js Ada --recent 3  # 问候并回放最近 3 条历史
 ```
 
 ## 布局
@@ -20,8 +21,8 @@ npm run build && node dist/entry/cli.js Ada    # 运行 CLI
 ```
 src/
 ├── entry/     # 入口与 adapter（CLI）
-├── service/   # use case 编排
-├── domain/    # 纯领域规则 + 端口定义（零 IO）
+├── service/   # use case 编排（greet / recent）
+├── domain/    # 纯领域规则 + 端口定义（Clock 查询 / GreetingLog 命令），零 IO
 └── infra/     # 端口实现（时钟、存储、外部系统）
 tests/
 └── unit/          # domain、service（fake 替身）

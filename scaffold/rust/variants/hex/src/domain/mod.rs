@@ -2,3 +2,4 @@
 
 pub mod clock;
 pub mod greeting;
+pub mod greeting_log;

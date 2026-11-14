@@ -20,7 +20,13 @@ from __pkg_name__.domain.greeting import greeting_for
     ],
 )
 def test_greeting_for_matches_expected_part(hour: int, expected_part: str) -> None:
-    assert greeting_for(hour, "Ada") == f"{expected_part}, Ada."
+    assert greeting_for(hour, "Ada").text == f"{expected_part}, Ada."
+
+
+def test_greeting_carries_rule_inputs() -> None:
+    greeting = greeting_for(9, "Ada")
+
+    assert (greeting.hour, greeting.name) == (9, "Ada")
 
 
 @pytest.mark.parametrize("hour", [-1, 24, 99])

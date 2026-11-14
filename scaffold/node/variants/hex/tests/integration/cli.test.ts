@@ -23,4 +23,14 @@ describe("cli（真实组装路径）", () => {
     expect(run([])).toBe(0);
     expect(log).toHaveBeenCalledExactlyOnceWith(expect.stringMatching(/^Good \w+, world\.$/));
   });
+
+  it("--recent 回放历史（同一次组装）", () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+
+    expect(run(["Ada", "--recent", "3"])).toBe(0);
+    const lines = log.mock.calls.map((args) => String(args[0]));
+    expect(lines).toHaveLength(2); // 本次问候 + 历史里刚生成的这一条
+    expect(lines[0]).toBe(lines[1]);
+    expect(lines[0]).toMatch(/, Ada\.$/);
+  });
 });

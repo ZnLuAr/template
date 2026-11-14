@@ -105,9 +105,12 @@ class InitSmokeTest(unittest.TestCase):
         proj = self._init("python", "demo-app", "hex")
         self.assertTrue((proj / "src" / "demo_app" / "service" / "greeter.py").is_file())
         self.assertTrue((proj / "src" / "demo_app" / "domain" / "greeting.py").is_file())
+        self.assertTrue((proj / "src" / "demo_app" / "domain" / "ports.py").is_file())
+        self.assertTrue((proj / "src" / "demo_app" / "infra" / "greeting_log.py").is_file())
         self.assertFalse((proj / "src" / "demo_app" / "logic").exists())
         self.assertFalse((proj / "src" / "demo_app" / "model").exists())
         self.assertIn("demo_app", self._read(proj, "src/demo_app/service/greeter.py"))
+        self.assertIn("GreetingLog", self._read(proj, "src/demo_app/domain/ports.py"))
         self._assert_common(proj, "python", "hex")
 
     def test_go_cls(self) -> None:
@@ -123,6 +126,8 @@ class InitSmokeTest(unittest.TestCase):
         proj = self._init("go", "demo-app", "hex")
         self.assertIn("demo-app/internal/service", self._read(proj, "cmd/demo-app/main.go"))
         self.assertTrue((proj / "internal" / "domain" / "clock.go").is_file())
+        self.assertTrue((proj / "internal" / "domain" / "greeting_log.go").is_file())
+        self.assertTrue((proj / "internal" / "infra" / "greeting_log.go").is_file())
         self.assertFalse((proj / "internal" / "logic").exists())
         self._assert_common(proj, "go", "hex")
 
@@ -135,6 +140,8 @@ class InitSmokeTest(unittest.TestCase):
 
         hex_ = self._init("node", "demo-app-hex", "hex")
         self.assertTrue((hex_ / "src" / "service" / "greeter.ts").is_file())
+        self.assertTrue((hex_ / "src" / "domain" / "greetingLog.ts").is_file())
+        self.assertTrue((hex_ / "src" / "infra" / "inMemoryGreetingLog.ts").is_file())
         self.assertFalse((hex_ / "src" / "logic").exists())
         self._assert_common(hex_, "node", "hex")
 
@@ -148,8 +155,23 @@ class InitSmokeTest(unittest.TestCase):
 
         hex_ = self._init("rust", "demo-app-hex", "hex")
         self.assertTrue((hex_ / "src" / "service" / "greeter.rs").is_file())
+        self.assertTrue((hex_ / "src" / "domain" / "greeting_log.rs").is_file())
+        self.assertTrue((hex_ / "src" / "infra" / "greeting_log.rs").is_file())
         self.assertFalse((hex_ / "src" / "logic").exists())
         self._assert_common(hex_, "rust", "hex")
+
+    def test_rust_layer_reexports(self) -> None:
+        # main/tests 用层边界短路径（logic::Greeter、infra::SystemClock），
+        # 依赖 mod.rs 的 pub use 再导出；缺失即编译失败（曾为存量 bug）
+        for arch, mod_pair in (
+            ("cls", ("src/logic/mod.rs", "pub use greeter::Greeter")),
+            ("cls", ("src/infra/mod.rs", "pub use clock::SystemClock")),
+            ("hex", ("src/service/mod.rs", "pub use greeter::Greeter")),
+        ):
+            layer = mod_pair[0].split("/")[1]
+            with self.subTest(arch=arch, layer=layer):
+                proj = self._init("rust", f"demo-reexport-{layer}", arch)
+                self.assertIn(mod_pair[1], self._read(proj, mod_pair[0]))
 
     def test_arch_alias(self) -> None:
         # 全称别名（classic / hexagonal）与短名等价

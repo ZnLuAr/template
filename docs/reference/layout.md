@@ -1,6 +1,6 @@
 # 参考：目录与分层约定
 
-> status: stable · owner: ZnLuAr · updated: 2026-11-12
+> status: stable · owner: ZnLuAr · updated: 2026-11-14
 
 ## 两个平面
 
@@ -44,7 +44,9 @@ tests/     镜像分层：unit → domain/service；integration → entry/infra
 
 依赖铁律（单向）：`entry → service → domain`；`infra → domain`（只实现 domain 定义的端口）；其余方向禁止。
 
-**两变体共性**：组装只发生在 entry；测试镜像分层；同一 Greeter 示例在两变体同构实现（都注入 + fake），差异由规则强度承载。
+端口分两类（示例见 scaffold）：**查询型**（读外部状态，如 `Clock`）与**命令型**（写副作用，如 `GreetingLog`）——命令型是「可替换的外部世界」的主要形态，repository / gateway 皆属此类。**驱动侧端口**（use case 接口）单入口时可省略，entry 直接依赖 service 具体类型；出现第二种传输（HTTP / 队列）时把 use case 抽成 domain 接口，entry 退为 adapter 之一。
+
+**两变体共性**：组装只发生在 entry；测试镜像分层；同一问候业务在两变体落地——cls 保持最薄形态，hex 含双类型端口与状态（刻意不对称，便于对照「hex 多买了什么」，见 ADR-0002）。
 
 ## 各语言落点对照
 

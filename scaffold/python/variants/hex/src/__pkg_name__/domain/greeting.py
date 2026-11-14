@@ -1,8 +1,21 @@
-"""Greeting 策略：纯领域规则。"""
+"""Greeting 实体与生成规则：纯领域规则，零 IO。"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
 
 
-def greeting_for(hour: int, name: str) -> str:
-    """按一天中的时刻（0..23）生成问候语。
+@dataclass(frozen=True)
+class Greeting:
+    """一条已生成的问候（领域对象，携带规则输入与输出）。"""
+
+    hour: int
+    name: str
+    text: str
+
+
+def greeting_for(hour: int, name: str) -> Greeting:
+    """按一天中的时刻（0..23）生成问候。
 
     Raises:
         ValueError: hour 越界。
@@ -17,4 +30,4 @@ def greeting_for(hour: int, name: str) -> str:
         part = "Good evening"
     else:
         part = "Good night"
-    return f"{part}, {name}."
+    return Greeting(hour=hour, name=name, text=f"{part}, {name}.")

@@ -33,7 +33,13 @@ mod tests {
 
     #[test]
     fn greet_uses_clock_hour() {
-        assert_eq!(Greeter::new(FakeClock(9)).greet("Ada").unwrap(), "Good morning, Ada.");
-        assert_eq!(Greeter::new(FakeClock(21)).greet("Ada").unwrap(), "Good evening, Ada.");
+        assert_eq!(
+            Greeter::new(FakeClock(9)).greet("Ada").unwrap(),
+            "Good morning, Ada."
+        );
+        assert_eq!(
+            Greeter::new(FakeClock(21)).greet("Ada").unwrap(),
+            "Good evening, Ada."
+        );
     }
 }

@@ -3,12 +3,24 @@
  */
 
 import type { Clock } from "../domain/clock.js";
-import { greetingFor } from "../domain/greeting.js";
+import { type Greeting, greetingFor } from "../domain/greeting.js";
+import type { GreetingLog } from "../domain/greetingLog.js";
 
 export class Greeter {
-  constructor(private readonly clock: Clock) {}
+  constructor(
+    private readonly clock: Clock,
+    private readonly log: GreetingLog,
+  ) {}
 
-  greet(name: string): string {
-    return greetingFor(this.clock.currentHour(), name);
+  /** 应用规则生成问候并记入历史。 */
+  greet(name: string): Greeting {
+    const greeting = greetingFor(this.clock.currentHour(), name);
+    this.log.save(greeting);
+    return greeting;
+  }
+
+  /** 读取最近 limit 条问候。 */
+  recent(limit: number): Greeting[] {
+    return this.log.recent(limit);
   }
 }

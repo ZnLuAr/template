@@ -1,6 +1,6 @@
 # 规范：Rust
 
-> status: stable · owner: ZnLuAr · updated: 2026-11-12
+> status: stable · owner: ZnLuAr · updated: 2026-11-14
 
 ## 布局
 
@@ -19,7 +19,8 @@
 ## 代码
 
 - edition 2024，MSRV 1.85；
-- 接口是 trait：hex 定义在 `domain`（架构前提）；cls 定义在 `model`（按需引入）；业务层用泛型 `Greeter<C: Clock>` 或 `dyn` 持有，二选一在实现处注明理由；
+- 接口是 trait：hex 定义在 `domain`（架构前提，查询与命令两类端口都定义于此，示例 `Clock` / `GreetingLog`）；cls 定义在 `model`（按需引入）；业务层用泛型 `Greeter<C: Clock>` 或 `dyn` 持有，二选一在实现处注明理由；
+- 层模块在 `mod.rs` 用 `pub use` 再导出对外类型（如 `logic::Greeter`、`infra::SystemClock`），main / tests 用层边界短路径；层内跨模块用完整路径（`crate::domain::greeting::Greeting`）；
 - 可恢复错误一律 `Result<T, E>`：规则层错误起步用 `String`/错误枚举，entry 转译后可用 `thiserror`（引入依赖时同步 `standards/rust.md`）；
 - `unwrap`/`expect` 只允许出现在测试与 entry 的「不可能失败」分支，并注明不变量。
 

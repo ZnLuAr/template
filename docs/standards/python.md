@@ -1,6 +1,6 @@
 # 规范：Python
 
-> status: stable · owner: ZnLuAr · updated: 2026-11-12
+> status: stable · owner: ZnLuAr · updated: 2026-11-14
 
 参考实现（模板中最完整的语言脚手架）。
 
@@ -26,7 +26,7 @@ ruff 规则集：`E F I UP B SIM RUF`，行宽 100。
 
 - 公开 API（函数签名、类属性）一律类型注解；内部可省；
 - `if __name__ == "__main__"` 只出现在 entry；
-- 接口用 `typing.Protocol`：hex 定义在 `domain/ports.py`（架构前提，service 只依赖协议）；cls 定义在 `model/`（如 `model/clock.py`，按需引入——logic 直接用 infra 类型，要替身测试或预知换实现时才抽）；
+- 接口用 `typing.Protocol`：hex 定义在 `domain/ports.py`（架构前提，查询与命令两类端口都定义于此，示例 `Clock` / `GreetingLog`）；cls 定义在 `model/`（如 `model/clock.py`，按需引入——logic 直接用 infra 类型，要替身测试或预知换实现时才抽）；
 - 异常：规则层（model/domain）抛业务错误（`ValueError` 子类起步即可），entry 负责转成退出码或用户可读信息。
 
 ## 禁忌

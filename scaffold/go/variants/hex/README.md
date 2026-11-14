@@ -11,7 +11,8 @@ go test ./...            # 测试
 go vet ./...             # 静态检查
 gofmt -w .               # 格式化
 
-go run ./cmd/__project_name__ -name world    # 运行 CLI
+go run ./cmd/__project_name__ -name world             # 运行 CLI
+go run ./cmd/__project_name__ -name Ada -recent 3     # 问候并回放最近 3 条历史
 ```
 
 ## 布局
@@ -19,7 +20,7 @@ go run ./cmd/__project_name__ -name world    # 运行 CLI
 ```
 cmd/__project_name__/   # entry：参数翻译、组装注入
 internal/
-├── service/   # use case 编排
-├── domain/    # 纯领域规则 + 端口定义（零 IO）
+├── service/   # use case 编排（Greet / Recent）
+├── domain/    # 纯领域规则 + 端口定义（Clock 查询 / GreetingLog 命令），零 IO
 └── infra/     # 端口实现（时钟、存储、外部系统）
 ```

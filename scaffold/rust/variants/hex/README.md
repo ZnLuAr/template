@@ -12,6 +12,7 @@ cargo clippy -- -D warnings         # lint
 cargo fmt                           # 格式化
 
 cargo run -- Ada                    # 运行 CLI
+cargo run -- Ada --recent 3         # 问候并回放最近 3 条历史
 ```
 
 ## 布局
@@ -20,8 +21,8 @@ cargo run -- Ada                    # 运行 CLI
 src/
 ├── main.rs      # entry：参数翻译、组装注入
 ├── lib.rs       # 模块声明
-├── service/     # use case 编排
-├── domain/      # 纯领域规则 + 端口定义（零 IO）
+├── service/     # use case 编排（greet / recent）
+├── domain/      # 纯领域规则 + 端口定义（Clock 查询 / GreetingLog 命令），零 IO
 └── infra/       # 端口实现（时钟、存储、外部系统）
 tests/           # integration（走真实组装路径）
 ```

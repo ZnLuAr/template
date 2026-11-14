@@ -24,10 +24,20 @@ func TestGreetingFor(t *testing.T) {
 			if err != nil {
 				t.Fatalf("GreetingFor(%d) 意外报错: %v", tt.hour, err)
 			}
-			if got != tt.expected {
-				t.Fatalf("GreetingFor(%d) = %q, 期望 %q", tt.hour, got, tt.expected)
+			if got.Text != tt.expected {
+				t.Fatalf("GreetingFor(%d) = %q, 期望 %q", tt.hour, got.Text, tt.expected)
 			}
 		})
+	}
+}
+
+func TestGreetingCarriesRuleInputs(t *testing.T) {
+	got, err := GreetingFor(9, "Ada")
+	if err != nil {
+		t.Fatalf("GreetingFor(9) 意外报错: %v", err)
+	}
+	if got.Hour != 9 || got.Name != "Ada" {
+		t.Fatalf("GreetingFor 应携带规则输入，实际 Hour=%d Name=%q", got.Hour, got.Name)
 	}
 }
 

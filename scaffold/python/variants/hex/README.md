@@ -11,7 +11,8 @@ pip install -e . --group dev   # 包 + 开发依赖（pytest/ruff）；uv 用 uv
 python -m pytest               # 测试
 python -m ruff check src tests
 
-__project_name__ world    # 运行 CLI（安装后）
+__project_name__ world                 # 运行 CLI（安装后）
+__project_name__ Ada --recent 3        # 问候并回放最近 3 条历史
 ```
 
 ## 布局
@@ -19,8 +20,8 @@ __project_name__ world    # 运行 CLI（安装后）
 ```
 src/__pkg_name__/
 ├── entry/     # 入口与 adapter（CLI）
-├── service/   # use case 编排
-├── domain/    # 纯领域规则 + 端口定义（零 IO）
+├── service/   # use case 编排（greet / recent）
+├── domain/    # 纯领域规则 + 端口定义（Clock 查询 / GreetingLog 命令），零 IO
 └── infra/     # 端口实现（时钟、存储、外部系统）
 tests/
 ├── unit/          # domain、service（fake 替身）

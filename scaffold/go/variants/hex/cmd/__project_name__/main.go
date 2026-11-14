@@ -12,15 +12,19 @@ import (
 
 func main() {
 	name := flag.String("name", "world", "要问候的名字")
+	recent := flag.Int("recent", 0, "问候后同时打印最近 N 条历史")
 	flag.Parse()
 
-	// 组装只发生在 entry：infra 注入 service。
-	greeter := service.NewGreeter(infra.NewSystemClock())
+	// 组装只发生在 entry：infra 适配器注入 service。
+	greeter := service.NewGreeter(infra.NewSystemClock(), infra.NewInMemoryGreetingLog())
 	greeting, err := greeter.Greet(*name)
 	if err != nil {
 		fmt.Fprintf(flag.CommandLine.Output(), "__project_name__: %v\n", err)
 		flag.Usage()
 		os.Exit(2) // 错误路径必须以非零退出码结束
 	}
-	fmt.Println(greeting)
+	fmt.Println(greeting.Text)
+	for _, item := range greeter.Recent(*recent) {
+		fmt.Println(item.Text)
+	}
 }
