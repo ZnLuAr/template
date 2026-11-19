@@ -1,6 +1,6 @@
 # 指南：实例化一个新项目
 
-> status: stable · owner: ZnLuAr · updated: 2026-11-12
+> status: stable · owner: ZnLuAr · updated: 2026-11-20
 
 ## 前置
 
@@ -20,7 +20,7 @@ python scripts/init.py --name my-service --lang go --arch hex \
 
 分层变体（ADR-0002）：`cls` = classic 三层式 `entry/logic/model/infra`（默认）；`hex` = hexagonal 四层 `entry/service/domain/infra`。选择依据见 [reference/layout.md](../reference/layout.md) 的「变体选择」。
 
-生成后目录即一个自洽的新项目：语言骨架可立即跑测试，文档机制与 AI 入口已就位（生成器未携带 `scripts/init.py` 本身，新项目保持干净）。
+生成后目录即一个自洽的新项目：语言骨架可立即跑测试，文档机制与 AI 入口已就位，`.github/workflows/ci.yml` 开箱即用（推送到 GitHub 后自动跑 check_docs + 格式检查 + lint + 测试；生成器未携带 `scripts/init.py` 本身，新项目保持干净）。
 
 完整参数与行为细节见 [reference/init.md](../reference/init.md)。
 

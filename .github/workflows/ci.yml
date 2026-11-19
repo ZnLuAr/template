@@ -21,3 +21,31 @@ jobs:
 
       - name: 生成器冒烟测试（实例化四种语言）
         run: python -m unittest discover -s scripts/tests -v
+
+  # 真实工具链实编：结构性冒烟不编译代码，编译级断裂（如缺 pub use 再导出）只有这里能抓到
+  scaffolds:
+    name: 脚手架实编（${{ matrix.lang }} × 两变体）
+    runs-on: ubuntu-latest
+    timeout-minutes: 30 # 挂死的冒烟步骤及时止损，不占满默认 6 小时
+    strategy:
+      fail-fast: false
+      matrix:
+        lang: [python, go, node, rust]
+    steps:
+      # 钉完整 commit SHA，防 tag 移动带来的供应链风险（升级时改 SHA 并核对 release note）
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+        if: matrix.lang == 'go'
+        with:
+          go-version-file: scaffold/go/go.mod
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        if: matrix.lang == 'node'
+        with:
+          node-version: "22"
+      - uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable 分支（2026-11 快照）
+        if: matrix.lang == 'rust'
+      - name: 实例化两变体并实编验收（格式 / lint / 测试 / CLI）
+        run: python scripts/check_scaffold.py --lang ${{ matrix.lang }}

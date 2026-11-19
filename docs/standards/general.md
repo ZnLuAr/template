@@ -1,6 +1,6 @@
 # 规范：通用（跨语言）
 
-> status: stable · owner: ZnLuAr · updated: 2026-11-12
+> status: stable · owner: ZnLuAr · updated: 2026-11-20
 
 语言细节见各语言规范：`python.md` / `go.md` / `typescript.md` / `rust.md`（模板含四篇，实例化项目仅保留所用语言）；分层与目录见 [../reference/layout.md](../reference/layout.md)。
 
@@ -31,7 +31,7 @@
 |---|---|
 | 分层 / 依赖方向 | `docs/reference/layout.md`、`system-map.md`、相关 ADR |
 | 公开接口（API / CLI / 配置项） | `docs/reference/` 对应篇 + `CHANGELOG.md` |
-| 目录 / 工具链命令 | `docs/standards/<lang>.md` + 对应 scaffold README |
+| 目录 / 工具链命令 | `docs/standards/<lang>.md` + 对应 scaffold README + `.github/workflows/ci.yml`（CI 命令照抄规范表） |
 | 实例化行为 | `docs/reference/init.md` + `system-map.md` 数据流 |
 | 重要取舍 | 新 ADR（从 `docs/templates/adr.md` 起） |
 | 面向使用者可见变化 | `CHANGELOG.md` |

@@ -1,6 +1,6 @@
 # 指南：模板自身的维护
 
-> status: stable · owner: ZnLuAr · updated: 2026-11-09
+> status: stable · owner: ZnLuAr · updated: 2026-11-20
 
 ## 改动类型 → 必跑验证
 
@@ -8,6 +8,7 @@
 |---|---|
 | 任何文件 | `python scripts/check_docs.py` |
 | `scaffold/`、`scripts/` | 加上 `python -m unittest discover -s scripts/tests`（冒烟会真实实例化四种语言） |
+| scaffold 示例代码 / 工具链配置 | 加上 `python scripts/check_scaffold.py`（真实工具链实例化验收，与 CI `scaffolds` job 同款） |
 | `docs/index.md` 结构 | `python scripts/check_docs.py`（死链与未登记都会被抓） |
 | 分层 / 占位符约定 | 同步 `docs/reference/layout.md` + 相关 ADR + 各 scaffold 注释 |
 
@@ -16,6 +17,8 @@
 | 改动 | 必须同步 |
 |---|---|
 | 加 / 删语言 scaffold | `docs/guides/add-language.md` 语义不变，但 README 语言列表、index、init.py 映射、冒烟用例、standards 五处联动 |
+| 改语言工具链命令（standards 表） | 对应 scaffold justfile + `scaffold/<lang>/.github/workflows/ci.yml` + `scripts/check_scaffold.py` 三处同步（项目 CI 与本机验收都照抄规范表） |
+| 升级 CI 用 action | 各 ci.yml 里的钉版 SHA 同步更新（模板根 + 四个 scaffold），核对 release note |
 | 改实例化行为（init.py） | `docs/reference/init.md` + `docs/architecture/system-map.md` 数据流 |
 | 改项目版 CLAUDE.md 骨架（`PROJECT_CLAUDE_TEMPLATE`） | `docs/reference/init.md` 行为描述 + `scripts/tests/` 冒烟断言 |
 | 改文档机制规则（check_docs.py） | `docs/standards/general.md` 的文档规则节 |

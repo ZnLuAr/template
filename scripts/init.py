@@ -111,15 +111,21 @@ def copy_asset(root: Path, target: Path, rel: str, ignore: tuple[str, ...] = ())
 
 
 def unpack_dir(src: Path, dst: Path, exclude: set[str] = frozenset()) -> None:
-    """把 src 的直接子项复制进 dst（scaffold 解包到项目根，不保留 scaffold 路径）。"""
+    """把 src 的直接子项复制进 dst（scaffold 解包到项目根，不保留 scaffold 路径）。
+
+    目录同名则递归合并（.github/ 由根资产先建、语言侧补 workflows）；
+    文件同名视为实例化冲突，报错退出而非静默覆盖。
+    """
     dst.mkdir(parents=True, exist_ok=True)
     for item in sorted(src.iterdir()):
         if item.name in exclude:
             continue
         to = dst / item.name
         if item.is_dir():
-            shutil.copytree(item, to)
+            unpack_dir(item, to)
         else:
+            if to.exists():
+                fail(f"实例化冲突：{to} 已存在，拒绝覆盖（检查 scaffold 与根资产的重叠）")
             shutil.copy2(item, to)
 
 

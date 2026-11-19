@@ -1,6 +1,6 @@
 # 参考：scripts/init.py
 
-> status: stable · owner: ZnLuAr · updated: 2026-11-12
+> status: stable · owner: ZnLuAr · updated: 2026-11-20
 
 ## 用法
 
@@ -20,7 +20,7 @@ python scripts/init.py --name <name> --lang <lang> [--arch cls|hex] [--target <p
 ## 行为细节
 
 1. **复制语言无关资产**：`AGENTS.md`、`.claude/`、`.editorconfig`、`.github/PULL_REQUEST_TEMPLATE.md`、`scripts/check_docs.py`、`docs/` 子集（templates/、context/、standards/general.md + 所选语言、reference/layout.md）。
-2. **复制 scaffold**：`scaffold/<lang>/` 工具链（排除 `variants/`）+ `scaffold/<lang>/variants/<arch>/`（所选分层骨架）+ `scaffold/_shared/`（CHANGELOG）。未选变体与生成器本身**不**进入新项目。
+2. **复制 scaffold**：`scaffold/<lang>/` 工具链（排除 `variants/`，含 `.github/workflows/ci.yml`——与语言规范命令对齐的项目 CI：check_docs + 格式检查 + lint + 测试）+ `scaffold/<lang>/variants/<arch>/`（所选分层骨架）+ `scaffold/_shared/`（CHANGELOG）。同名目录递归合并（`.github/`），同名文件报错拒绝覆盖。未选变体与生成器本身**不**进入新项目。
 3. **生成项目侧文件**：`docs/index.md`（按实际保留文件生成，链接必然有效）、`docs/architecture/contract.md` 与 `system-map.md`（自 templates 填充 TODO）、`docs/architecture/adr/` 目录。
 4. **生成 CLAUDE.md**：项目骨架（硬边界 + 项目原则 + 项目任务路由 + 事实源声明）由 init.py 内嵌模板生成（`PROJECT_CLAUDE_TEMPLATE`），追加所选变体 `scaffold/<lang>/variants/<arch>/CLAUDE.md` 正文作为「语言规则」段（段标题标注变体）。
 5. **替换与改名**：内容与路径中的三枚占位符全部替换；含占位符的目录组件改名。

@@ -1,6 +1,6 @@
 # 选装式项目模板
 
-> status: stable · owner: ZnLuAr · updated: 2026-11-12
+> status: stable · owner: ZnLuAr · updated: 2026-11-20
 
 选装式项目模板：为工作目录下的每个新项目提供统一的分层结构、文档机制和 AI 上下文体系。本仓库自身**不开发业务**，只维护模板、脚手架和生成器。
 
@@ -34,9 +34,9 @@ template/
 ├── CLAUDE.md / AGENTS.md        # AI 入口（薄路由，事实源在 docs/）
 ├── .claude/                     # skills（实例化、文档同步、上下文恢复）+ 权限
 ├── docs/                        # 文档机制：索引、架构、指南、参考、规范、模板、恢复点
-├── scaffold/                    # 各语言脚手架种子（python / go / node / rust，各含 cls / hex 分层变体）
-├── scripts/                     # init.py 生成器、check_docs.py 检查、生成器测试
-└── .github/                     # CI（文档检查 + 生成器冒烟）、PR 模板
+├── scaffold/                    # 各语言脚手架种子（python / go / node / rust，各含 cls / hex 分层变体 + 项目侧 ci.yml）
+├── scripts/                     # init.py 生成器、check_docs.py 检查、check_scaffold.py 实编验收、生成器测试
+└── .github/                     # CI（文档检查 + 生成器冒烟 + 四语言两变体实编 matrix）、PR 模板
 ```
 
 ## 设计决策

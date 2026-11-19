@@ -1,6 +1,6 @@
 # 系统地图：项目模板
 
-> status: stable · 范围：模板仓库自身的组件与数据流 · 最近核实：2026-11-09（初始版本） · 入口：`scripts/init.py`、`scripts/check_docs.py`
+> status: stable · 范围：模板仓库自身的组件与数据流 · 最近核实：2026-11-20 · 入口：`scripts/init.py`、`scripts/check_docs.py`、`scripts/check_scaffold.py`
 
 ## 当前流程
 
@@ -20,9 +20,10 @@ flowchart LR
 
 组件职责：
 
-- `scripts/init.py` — 生成器：复制、替换、裁剪、组装（唯一写新项目的地方）
+- `scripts/init.py` — 生成器：复制、替换、裁剪、组装（唯一写新项目的地方；scaffold 与根资产同名目录合并、同名文件拒绝覆盖）
 - `scripts/check_docs.py` — 文档健康：索引登记、死链、ADR 编号、头部标记
-- `scaffold/<lang>/` — 语言种子：工具链配置（语言根）+ `variants/{cls,hex}/` 分层骨架 + 示例 + 语言 CLAUDE.md 段（实例化按 `--arch` 选其一）
+- `scripts/check_scaffold.py` — 实编验收：实例化两变体并用真实工具链跑格式 / lint / 测试 / CLI（模板 CI `scaffolds` job 的本机同款）
+- `scaffold/<lang>/` — 语言种子：工具链配置（语言根，含项目侧 `.github/workflows/ci.yml`）+ `variants/{cls,hex}/` 分层骨架 + 示例 + 语言 CLAUDE.md 段（实例化按 `--arch` 选其一）
 - `scaffold/_shared/` — 语言无关的项目侧初始文件（CHANGELOG）
 - `docs/` — 单一事实源（见 ADR-0003）
 - `.claude/skills/` — 可复用任务流程
@@ -44,12 +45,12 @@ flowchart LR
 
 ## 已确认 / 推断 / 未知
 
-- 已确认：目录结构与脚本行为以当前代码为准（2026-11-09 建立时点）。
-- 推断：无（初版）。
-- 未知：CI 上各语言工具链的真实编译验证（v0.1 未做，见可选改进）。
+- 已确认：目录结构与脚本行为以当前代码为准；`check_scaffold.py` 四语言 × 两变体本机全过（2026-11-20）。
+- 待验证：GitHub runner 上 `scaffolds` job 首跑（命令与本机同款，环境差异理论上为零）。
+- 推断：无。
 
 ## 可选改进
 
-- CI 中对四个 scaffold 做真实工具链编译 + 测试（需要 go/node/rust toolchain 矩阵）
+- CI 增量缓存（rust-cache / npm 锁文件）：脚手架当前零运行时依赖且无锁文件，收益小；出现依赖或锁文件后再评估
 - service / lib 变体入口；单项目多语言组件化
 - 与 `frontend-template-next` 的关系收敛（互引或吸收）

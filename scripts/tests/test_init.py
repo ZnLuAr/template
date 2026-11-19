@@ -173,6 +173,22 @@ class InitSmokeTest(unittest.TestCase):
                 proj = self._init("rust", f"demo-reexport-{layer}", arch)
                 self.assertIn(mod_pair[1], self._read(proj, mod_pair[0]))
 
+    def test_project_ci_workflow(self) -> None:
+        # 实例化项目自带与所选语言匹配的 CI（check_docs + 格式检查 + lint + 测试），PR 模板仍在
+        markers = {
+            "python": "python -m pytest",
+            "go": "go test ./...",
+            "node": "npm test",
+            "rust": "cargo test",
+        }
+        for lang, marker in markers.items():
+            with self.subTest(lang=lang):
+                proj = self._init(lang, f"demo-ci-{lang}", "cls")
+                ci = self._read(proj, ".github/workflows/ci.yml")
+                self.assertIn(marker, ci)
+                self.assertIn("check_docs.py", ci)
+                self.assertTrue((proj / ".github/PULL_REQUEST_TEMPLATE.md").is_file())
+
     def test_arch_alias(self) -> None:
         # 全称别名（classic / hexagonal）与短名等价
         for alias, arch, marker, pkg in (
@@ -211,6 +227,37 @@ class InitSmokeTest(unittest.TestCase):
         mod.transform(d, {"__project_name__": "demo"})
         self.assertTrue((d / "logo.demo.bin").is_file())
         self.assertFalse((d / "logo.__project_name__.bin").exists())
+
+    def test_unpack_dir_collision_semantics(self) -> None:
+        """目录同名递归合并（.github 场景），文件同名拒绝覆盖（防静默丢根资产）。"""
+        spec = importlib.util.spec_from_file_location("tmpl_init", SCRIPTS_DIR / "init.py")
+        assert spec is not None and spec.loader is not None
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+
+        src = self.tmp / "src"
+        (src / ".github" / "workflows").mkdir(parents=True)
+        (src / ".github" / "workflows" / "ci.yml").write_text("ci", encoding="utf-8")
+
+        dst = self.tmp / "dst"
+        (dst / ".github" / "PULL_REQUEST_TEMPLATE.md").parent.mkdir(parents=True)
+        (dst / ".github" / "PULL_REQUEST_TEMPLATE.md").write_text("pr", encoding="utf-8")
+
+        mod.unpack_dir(src, dst)  # 目录合并，文件互不重叠 → 成功
+        self.assertTrue((dst / ".github" / "workflows" / "ci.yml").is_file())
+        self.assertEqual(
+            (dst / ".github" / "PULL_REQUEST_TEMPLATE.md").read_text(encoding="utf-8"), "pr"
+        )
+
+        (src / ".github" / "PULL_REQUEST_TEMPLATE.md").write_text("conflict", encoding="utf-8")
+        with self.assertRaises(SystemExit):
+            mod.unpack_dir(src, dst)  # 与已合并结果文件重叠 → 拒绝
+
+        deep = self.tmp / "dst-deep"
+        (deep / ".github").mkdir(parents=True)
+        (deep / ".github" / "PULL_REQUEST_TEMPLATE.md").write_text("old", encoding="utf-8")
+        with self.assertRaises(SystemExit):
+            mod.unpack_dir(src, deep)  # 深层文件冲突同样拒绝
 
     def test_rejects_invalid_name(self) -> None:
         r = subprocess.run(

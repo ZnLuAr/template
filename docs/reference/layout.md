@@ -1,6 +1,6 @@
 # 参考：目录与分层约定
 
-> status: stable · owner: ZnLuAr · updated: 2026-11-14
+> status: stable · owner: ZnLuAr · updated: 2026-11-20
 
 ## 两个平面
 
@@ -13,7 +13,7 @@
 ├── docs/                       单一事实源（index 强制登记）
 ├── scaffold/                   语言种子（仅模板仓库有）
 ├── scripts/                    生成器与检查（项目侧只保留 check_docs.py）
-└── .github/                    CI 与 PR 模板
+└── .github/                    CI 与 PR 模板（实例化项目带所选语言的 ci.yml）
 ```
 
 **代码平面**（每个 scaffold 内，双变体可选，ADR-0002）：变体目录在 `scaffold/<lang>/variants/<arch>/`，实例化时由 `--arch` 选择（`cls` 默认 / `hex`；全称 `classic` / `hexagonal` 兼容），未选变体不进入项目。
